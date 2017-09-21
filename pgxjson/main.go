@@ -1,9 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/jackc/pgx"
+	"github.com/json-iterator/go"
 	"log"
 )
 
@@ -23,8 +23,8 @@ type Person struct {
 func main() {
 	config := pgx.ConnConfig{
 		Host:     "localhost",
-		User:     "test",
-		Password: "test",
+		User:     "postgres",
+		Password: "postgres",
 		Database: "test",
 	}
 
@@ -47,7 +47,7 @@ func main() {
 
 	var person Person
 	contact := map[string]string{"email": "jmoiron@jmoiron.net"}
-	contact_json, _ := json.Marshal(contact)
+	contact_json, _ := jsoniter.Marshal(contact)
 
 	_, err = conn.Exec("INSERT INTO person (first_name, last_name, contact) VALUES ($1, $2, $3)", "Jason", "Moiron", contact_json)
 	if err != nil {

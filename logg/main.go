@@ -55,23 +55,28 @@ func ZapProductionConfig(logfile, errorfile string) zap.Config {
 		ErrorOutputPaths: []string{"stderr", errorfile},
 	}
 }
+
+var (
+	log *zap.Logger
+)
+
 func main() {
 
 	logger, _ := ZapProductionConfig(logfile, errorfile).Build()
 
 	defer logger.Sync() // flushes buffer, if any
-	sugar := logger.Sugar()
-	sugar.Debugw("failed to fetch URL",
+	log = logger.Sugar()
+	log.Debugw("failed to fetch URL",
 		// Structured context as loosely typed key-value pairs.
 		"url", url,
 		"attempt", 3,
 		"backoff", time.Second,
 	)
-	sugar.Infow("Failed   URL: %s", url, "failed to fetch URL",
+	log.Infow("Failed   URL: %s", url, "failed to fetch URL",
 		// Structured context as loosely typed key-value pairs.
 		"url", url,
 		"attempt", 3,
 		"backoff", time.Second)
-	logger.Sync()
+	log.Sync()
 
 }

@@ -90,8 +90,8 @@ func main() {
 		fmt.Println("insert OK ")
 	}
 
-	s := mgc.Session.Clone()
-	db := s.DB(mgc.Mongo.Database)
+	s := mgc.MgoSession.Clone()
+	db := s.DB(mgc.MgoDial.Database)
 	xlsx.Ximport(db, xlsx.ExcelFileName)
 
 }
