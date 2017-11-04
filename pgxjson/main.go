@@ -1,24 +1,35 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
+
 	"github.com/jackc/pgx"
 	"github.com/json-iterator/go"
+	"github.com/satori/go.uuid"
 	"log"
 )
 
 var schema = `
 CREATE TABLE person (
+     id uuid constraint user_pk primary key  not null,
     first_name text,
     last_name text,
     contact JSON
 );`
 
-type Person struct {
-	FirstName string            `db:"first_name"`
-	LastName  string            `db:"last_name"`
-	Contact   map[string]string `db:"contact"`
-}
+type (
+	Person struct {
+		Id        string  `db:"id"`
+		FirstName string  `db:"first_name"`
+		LastName  string  `db:"last_name"`
+		Contact   Contact `db:"contact"`
+	}
+	Contact struct {
+		Address string `json:"address"`
+		Post    string `json:"post"`
+	}
+)
 
 func main() {
 	config := pgx.ConnConfig{
@@ -45,19 +56,40 @@ func main() {
 		panic(err)
 	}
 
+	id := NewGuid()
 	var person Person
-	contact := map[string]string{"email": "jmoiron@jmoiron.net"}
+	contact := new(Contact)
+	contact.Address = "tsingson"
+	contact.Post = "1234"
 	contact_json, _ := jsoniter.Marshal(contact)
 
-	_, err = conn.Exec("INSERT INTO person (first_name, last_name, contact) VALUES ($1, $2, $3)", "Jason", "Moiron", contact_json)
+	_, err = conn.Exec("INSERT INTO person (id, first_name, last_name, contact) VALUES ($1, $2, $3, $4)", id, "Jason", "Moiron", contact_json)
 	if err != nil {
 		panic(err)
 	}
 
-	row := conn.QueryRow("SELECT first_name, last_name, contact FROM person LIMIT 1")
-	err = row.Scan(&person.FirstName, &person.LastName, &person.Contact)
+	row := conn.QueryRow("SELECT id, first_name, last_name, contact::json FROM person LIMIT 1")
+	err = row.Scan(&person.Id, &person.FirstName, &person.LastName, &person.Contact)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%v", person)
+	fmt.Printf("%v", person.Contact.Post)
+	fmt.Printf("%v", person.Id)
+}
+
+type Guid struct {
+	Uuid uuid.UUID
+}
+
+func Uuid4String() string {
+	return NewGuid()
+}
+
+//
+func NewGuid() string {
+	//	enc := new(guid.Base58)
+	u := uuid.NewV4()
+	return hex.EncodeToString(u.Bytes())
+
+	//return base58.Encode([]byte(ustring))
 }

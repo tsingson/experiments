@@ -3,15 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/jackc/pgx"
+	"github.com/tsingson/experiments/fastpgx/templates"
+	"github.com/valyala/fasthttp"
 	"log"
 	"runtime"
 	"sort"
-
-	"github.com/jackc/pgx"
-	"github.com/valyala/fasthttp"
-
-
-	"github.com/tsingson/test/fastpgx/templates"
 )
 
 var (
@@ -136,18 +133,9 @@ func fetchRandomWorld(w *World) {
 	}
 }
 
-func mustPrepare(db *pgx.Conn, name, query string) *pgx.PreparedStatement {
-	stmt, err := db.Prepare(name, query)
-	if err != nil {
-		log.Fatalf("Error when preparing statement %q: %s", query, err)
-	}
-	return stmt
-}
-
 func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, dbPort uint16, maxConnectionsInPool int) (*pgx.ConnPool, error) {
 
 	var successOrFailure string = "OK"
-
 	var config pgx.ConnPoolConfig
 
 	config.Host = dbHost

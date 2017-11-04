@@ -3,14 +3,12 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"github.com/tsingson/experiments/fastpgx/templates"
+	"github.com/valyala/fasthttp"
 	"log"
 	"math/rand"
 	"net"
 	"sync"
-
-	"github.com/valyala/fasthttp"
-
-	"github.com/tsingson/test/fastpgx/templates"
 )
 
 const worldRowCount = 10000

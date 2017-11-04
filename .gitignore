@@ -4,7 +4,7 @@
 */vendor
 # Files for the Dalvik VM
 *.dex
-
+vendor/
 # Java class files
 *.class
 
