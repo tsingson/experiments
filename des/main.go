@@ -5,25 +5,43 @@ import (
 	"crypto/cipher"
 	"crypto/des"
 	"encoding/base64"
-	"fmt"
-	"github.com/davecgh/go-spew/spew"
+	"reflect"
+	"unsafe"
+
+	"github.com/sanity-io/litter"
 )
 
 func main() {
-	var mdata string = "hellow world , kill 1234567890"
-	spew.Dump(mdata)
-	key := []byte("76543456")
+
+	key := []byte{0xa3, 0xbe, 0x93, 0xff, 0x10, 0x34, 0x5f, 0xde,
+		0xc6, 0x2e, 0x57, 0x83, 0x29, 0x7c, 0x8e, 0xf6,
+		0xa3, 0x58, 0x34, 0x27, 0x13, 0x2c, 0x4e, 0xd2}
+
 	iv := []byte("34234323")
-	data := []byte(mdata)
+	data := []byte(`{"activationcode":"123445678asd","mac":"00:50:56:31:40:38","mac_2":"03:40:76:A1:4C:E8","apktype":"WonderfulOttMovie","libversion":"libVK_STBProxy1.3.9","nativesn":"12.00-09.10-10000000","platforminfo":"Android 6.01","grade":3}`)
 	out, _ := DesEncrypt(data, key, iv)
 	debyte := base64Encode(out)
-	spew.Dump(debyte)
+	litter.Dump(string(debyte))
+
+	/**
 	fmt.Println(debyte)
 
 	enbyte, _ := base64Decode(debyte)
+	litter.Dump(enbyte)
+
 	//log.Println("base:", enbyte)
 	out, _ = DesDecrypt(enbyte, key, iv)
-	spew.Dump(out)
+	litter.Dump(out)
+	*/
+}
+
+func BytesToStringUnsafe(b []byte) string {
+	bytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+	strHeader := reflect.StringHeader{
+		Data: bytesHeader.Data,
+		Len:  bytesHeader.Len,
+	}
+	return *(*string)(unsafe.Pointer(&strHeader))
 }
 func DesEncrypt(data, key []byte, iv []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)

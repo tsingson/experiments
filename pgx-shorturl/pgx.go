@@ -12,21 +12,24 @@ func afterConnect(conn *pgx.Conn) (err error) {
     select url from shortened_urls where id=$1
   `)
 	if err != nil {
-		return
+		return err
 	}
 
 	_, err = conn.Prepare("deleteUrl", `
     delete from shortened_urls where id=$1
   `)
 	if err != nil {
-		return
+		return err
 	}
 
 	_, err = conn.Prepare("putUrl", `
     insert into shortened_urls(id, url) values ($1, $2)
     on conflict (id) do update set url=excluded.url
   `)
-	return
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func fetchUrl(path string) (string, error) {

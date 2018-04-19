@@ -1,0 +1,6 @@
+package: github.com/tsingson/experiments/pgx-shorturl
+import:
+- package: github.com/jackc/pgx
+  subpackages:
+  - log/log15adapter
+- package: gopkg.in/inconshreveable/log15.v2

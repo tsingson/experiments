@@ -54,7 +54,7 @@ func main() {
 	})
 
 	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/auth", authHandler)
+	http.HandleFunc("/auth-fasthttp", authHandler)
 
 	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
 		err := srv.HandleAuthorizeRequest(w, r)
@@ -99,7 +99,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		us.Set("LoggedInUserID", "000000")
-		w.Header().Set("Location", "/auth")
+		w.Header().Set("Location", "/auth-fasthttp")
 		w.WriteHeader(http.StatusFound)
 		return
 	}
@@ -128,7 +128,7 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		us.Set("UserID", us.Get("LoggedInUserID"))
 		return
 	}
-	outputHTML(w, r, "static/auth.html")
+	outputHTML(w, r, "static/auth-fasthttp.html")
 }
 
 func outputHTML(w http.ResponseWriter, req *http.Request, filename string) {

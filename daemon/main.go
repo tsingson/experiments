@@ -13,16 +13,14 @@ import (
 )
 
 const (
-
 	// name of the service
-	name        = "myservice"
-	description = "My Echo Service"
-
+	name        = "aaa_service"
+	description = "vk AAA Service"
 	// port which daemon should be listen
-	port = ":9977"
+	port = ":80"
 )
 
-//	dependencies that are NOT required by the service, but might be used
+// dependencies that are NOT required by the service, but might be used
 var dependencies = []string{"dummy.service"}
 
 var stdlog, errlog *log.Logger
@@ -85,14 +83,11 @@ func (service *Service) Manage() (string, error) {
 			stdlog.Println("Stoping listening on ", listener.Addr())
 			listener.Close()
 			if killSignal == os.Interrupt {
-				return "Daemon was interruped by system signal", nil
+				return "Daemon was interrupted by system signal", nil
 			}
 			return "Daemon was killed", nil
 		}
 	}
-
-	// never happen, but need to complete code
-	return usage, nil
 }
 
 // Accept a client connection and collect it in a channel
@@ -118,8 +113,8 @@ func handleClient(client net.Conn) {
 }
 
 func init() {
-	stdlog = log.New(os.Stdout, "", log.Ldate|log.Ltime)
-	errlog = log.New(os.Stderr, "", log.Ldate|log.Ltime)
+	stdlog = log.New(os.Stdout, "", 0)
+	errlog = log.New(os.Stderr, "", 0)
 }
 
 func main() {
@@ -135,4 +130,6 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println(status)
+	execpath, _ := daemon.ExecPath()
+	fmt.Println(execpath)
 }

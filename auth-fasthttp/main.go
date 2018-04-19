@@ -48,6 +48,7 @@ func BasicAuth(h fasthttp.RequestHandler, requiredUser, requiredPassword string)
 
 		if hasAuth && user == requiredUser && password == requiredPassword {
 			// Delegate request to the given handle
+			fmt.Printf(ctx, "protectd")
 			h(ctx)
 			return
 		}
@@ -67,10 +68,9 @@ func Protected(ctx *fasthttp.RequestCtx) {
 	fmt.Fprint(ctx, "Protected!\n")
 }
 
-/**
 func main() {
 	user := "gordon"
-	pass := "secret!"
+	pass := "secret"
 
 	router := fasthttprouter.New()
 	router.GET("/", Index)
@@ -78,4 +78,3 @@ func main() {
 
 	log.Fatal(fasthttp.ListenAndServe(":8080", router.Handler))
 }
-*/

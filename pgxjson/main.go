@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
-
 	"github.com/jackc/pgx"
 	"github.com/json-iterator/go"
 	"github.com/satori/go.uuid"
@@ -32,6 +31,7 @@ type (
 )
 
 func main() {
+
 	config := pgx.ConnConfig{
 		Host:     "localhost",
 		User:     "postgres",
