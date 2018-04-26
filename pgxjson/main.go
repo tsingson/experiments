@@ -6,16 +6,9 @@ import (
 	"github.com/jackc/pgx"
 	"github.com/json-iterator/go"
 	"github.com/satori/go.uuid"
+	"github.com/tsingson/btcutil/base58"
 	"log"
 )
-
-var schema = `
-CREATE TABLE person (
-     id uuid constraint user_pk primary key  not null,
-    first_name text,
-    last_name text,
-    contact JSON
-);`
 
 type (
 	Person struct {
@@ -29,6 +22,40 @@ type (
 		Post    string `json:"post"`
 	}
 )
+
+var schema = `
+CREATE TABLE person (
+     id uuid constraint user_pk primary key  not null,
+    first_name text,
+    last_name text,
+    contact JSON
+);`
+
+// AfterConnect creates the prepared statements that this application uses
+func AfterConnect(conn *pgx.Conn) (err error) {
+	_, err = conn.Prepare("getUrl", `
+    select url from shortened_urls where id=$1
+  `)
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Prepare("deleteUrl", `
+    delete from shortened_urls where id=$1
+  `)
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Prepare("putUrl", `
+    insert into shortened_urls(id, url) values ($1, $2)
+    on conflict (id) do update set url=excluded.url
+  `)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func main() {
 
@@ -46,6 +73,7 @@ func main() {
 	defer conn.Close()
 
 	// exec the schema or fail
+	/**
 	_, err = conn.Exec("DROP TABLE IF EXISTS person;")
 	if err != nil {
 		panic(err)
@@ -55,7 +83,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
+	*/
 	id := NewGuid()
 	var person Person
 	contact := new(Contact)
@@ -92,4 +120,12 @@ func NewGuid() string {
 	return hex.EncodeToString(u.Bytes())
 
 	//return base58.Encode([]byte(ustring))
+}
+
+func NewGuidBase58() string {
+	//	enc := new(guid.Base58)
+	u := uuid.NewV4()
+	//return hex.EncodeToString(u.Bytes())
+
+	return base58.Encode(u.Bytes())
 }

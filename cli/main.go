@@ -2,37 +2,38 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli"
 )
 
 func main() {
-	tasks := []string{"cook", "clean", "laundry", "eat", "sleep", "code"}
+	app := cli.NewApp()
 
-	app := &cli.App{
-		EnableShellCompletion: true,
-		Commands: []*cli.Command{
-			{
-				Name:    "complete",
-				Aliases: []string{"c"},
-				Usage:   "complete a task on the list",
-				Action: func(c *cli.Context) error {
-					fmt.Println("completed task: ", c.Args().First())
-					return nil
-				},
-				ShellComplete: func(c *cli.Context) {
-					// This will complete if no args are passed
-					if c.NArg() > 0 {
-						return
-					}
-					for _, t := range tasks {
-						fmt.Println(t)
-					}
-				},
+	app.Commands = []cli.Command{
+		{
+			Name:    "generate",
+			Aliases: []string{"g"},
+			Usage:   "generate 3000 SN to a excel file",
+			Action: func(c *cli.Context) error {
+				fmt.Println("added task: ", c.Args().First())
+				return nil
+			},
+		},
+		{
+			Name:    "import",
+			Aliases: []string{"i"},
+			Usage:   "import a excel SN file to platform",
+			Action: func(c *cli.Context) error {
+				fmt.Println("completed task: ", c.Args().First())
+				return nil
 			},
 		},
 	}
 
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
