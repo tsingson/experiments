@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/tsingson/tsingsound/postjson"
+	"github.com/mozillazg/request"
+	"github.com/pkg/errors"
+	"net/http"
+	"sync"
 )
 
 type (
@@ -14,13 +17,11 @@ type (
 
 func main() {
 	var cq = config{"test", "Status"}
-	responseBody, err := postjson.PostJson("http://httpbin.org/post", cq)
+	responseBody, err := httpPost("http://httpbin.org/post", cq)
 	if err == nil {
 		fmt.Println(responseBody)
 	}
 }
-
-/**
 
 func httpPost(postUrl string, postJson interface{}) (string, error) {
 	var respBody string
@@ -51,4 +52,3 @@ func httpPost(postUrl string, postJson interface{}) (string, error) {
 	}
 	return "", errors.New("error ")
 }
-*/

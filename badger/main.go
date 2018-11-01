@@ -6,7 +6,7 @@ import (
 
 	"github.com/sanity-io/litter"
 	"github.com/satori/go.uuid"
-	"github.com/tsingson/gin/fasthttputils"
+	"github.com/tsingson/fastweb/fasthttputils"
 	"github.com/tsingson/vk/txn"
 )
 

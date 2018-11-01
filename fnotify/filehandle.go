@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/tsingson/gin/fasthttputils"
+	"github.com/tsingson/fastweb/fasthttputils"
 	"os"
 )
 

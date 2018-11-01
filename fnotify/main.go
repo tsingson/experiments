@@ -1,70 +1,65 @@
-// +build !plan9
-
+// main.go
 package main
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/fsnotify/fsnotify"
-	"github.com/tsingson/gin/fasthttputils"
+	"github.com/tsingson/fastweb/fasthttputils"
+	"github.com/tsingson/fastweb/utils"
+
+	"log"
+	"os"
+	"path/filepath"
 )
 
+func doev(watcher *fsnotify.Watcher, event fsnotify.Event) {
+	switch event.Op {
+	case fsnotify.Create:
+		watcher.Add(event.Name)
+		log.Println("create:", event.Name)
+	case fsnotify.Rename, fsnotify.Remove:
+		log.Println("remove:", event.Name)
+		watcher.Remove(event.Name)
+	case fsnotify.Write:
+		log.Println("write:", event.Name)
+	}
+}
 func main() {
 	path, _ := fasthttputils.GetCurrentExecDir()
-	path = path + "/vod"
-	fsNotifyWatcher(path)
-	select {}
-}
-func fsNotifyWatcher(path ...string) {
-	watcher, err := fasthttputils.NewWatcher()
+	watchdir := utils.StrBuilder(path, "/log")
+	var err error
+	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
 	}
-	//	defer watcher.Close()
+	defer watcher.Close()
+
 	done := make(chan bool)
-	go watchWorker(watcher)
+	go func() {
+		for {
+			select {
+			case event := <-watcher.Events:
+				//log.Println("event:", event)
+				doev(watcher, event)
 
-	for _, mypath := range path {
-		if len(mypath) > 0 {
-			err = watcher.AddRecursive(mypath)
-			if err != nil {
-				log.Fatal(err)
+			case err := <-watcher.Errors:
+				log.Println("error:", err)
 			}
 		}
+	}()
+	err = watcher.Add(watchdir)
+	if err != nil {
+		log.Fatal(err)
 	}
-
+	err = filepath.Walk(watchdir, func(path string, info os.FileInfo, err error) error {
+		err = watcher.Add(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return nil
+	})
+	if err != nil {
+		fmt.Printf("walk error [%v]\n", err)
+	}
 	<-done
-}
-
-func watchWorker(watcher *fasthttputils.RWatcher) {
-
-	for {
-		select {
-		case event := <-watcher.Events:
-			//	log.Println("event:", event)
-			if event.Op&fsnotify.Create == fsnotify.Create {
-				// call listener
-				go fileWorker(event.Name)
-			}
-			if event.Op&fsnotify.Chmod == fsnotify.Chmod {
-				filenmae := event.Name
-				fmt.Println("chmod        ", filenmae)
-			}
-
-		case err := <-watcher.Errors:
-			log.Println("error:", err)
-		}
-	}
-
-}
-
-func fileWorker(filenme string) {
-	checksum, filesize, err := getFileInfo(filenme)
-	fmt.Println("file neme: ", filenme)
-	if err == nil {
-		fmt.Println("file checksum: ", checksum)
-		fmt.Println("file size: ", filesize)
-		fmt.Println(" ")
-	}
 }

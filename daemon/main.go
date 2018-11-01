@@ -1,135 +1,194 @@
-// Example of a daemon with echo service
+// Copyright 2015 Daniel Theophanes.
+// Use of this source code is governed by a zlib-style
+// license that can be found in the LICENSE file.
+
+// Simple service that only works by printing a log message every few seconds.
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
-	"net"
 	"os"
-	"os/signal"
-	"syscall"
+	"os/exec"
+	"path/filepath"
 
-	"github.com/takama/daemon"
+	"github.com/kardianos/osext"
+	"github.com/kardianos/service"
 )
 
-const (
-	// name of the service
-	name        = "aaa_service"
-	description = "vk AAA Service"
-	// port which daemon should be listen
-	port = ":80"
-)
+// Config is the runner app config structure.
+type Config struct {
+	Name, DisplayName, Description string
 
-// dependencies that are NOT required by the service, but might be used
-var dependencies = []string{"dummy.service"}
+	Dir  string
+	Exec string
+	Args []string
+	Env  []string
 
-var stdlog, errlog *log.Logger
-
-// Service has embedded daemon
-type Service struct {
-	daemon.Daemon
+	Stderr, Stdout string
 }
 
-// Manage by daemon commands or run the daemon
-func (service *Service) Manage() (string, error) {
+var logger service.Logger
 
-	usage := "Usage: myservice install | remove | start | stop | status"
+type program struct {
+	exit    chan struct{}
+	service service.Service
 
-	// if received any kind of command, do it
-	if len(os.Args) > 1 {
-		command := os.Args[1]
-		switch command {
-		case "install":
-			return service.Install()
-		case "remove":
-			return service.Remove()
-		case "start":
-			return service.Start()
-		case "stop":
-			return service.Stop()
-		case "status":
-			return service.Status()
-		default:
-			return usage, nil
-		}
-	}
+	*Config
 
-	// Do something, call your goroutines, etc
+	cmd *exec.Cmd
+}
 
-	// Set up channel on which to send signal notifications.
-	// We must use a buffered channel or risk missing the signal
-	// if we're not ready to receive when the signal is sent.
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, os.Kill, syscall.SIGTERM)
-
-	// Set up listener for defined host and port
-	listener, err := net.Listen("tcp", port)
+func (p *program) Start(s service.Service) error {
+	// Look for exec.
+	// Verify home directory.
+	fullExec, err := exec.LookPath(p.Exec)
 	if err != nil {
-		return "Possibly was a problem with the port binding", err
+		return fmt.Errorf("Failed to find executable %q: %v", p.Exec, err)
 	}
 
-	// set up channel on which to send accepted connections
-	listen := make(chan net.Conn, 100)
-	go acceptConnection(listener, listen)
+	p.cmd = exec.Command(fullExec, p.Args...)
+	p.cmd.Dir = p.Dir
+	p.cmd.Env = append(os.Environ(), p.Env...)
 
-	// loop work cycle with accept connections or interrupt
-	// by system signal
-	for {
-		select {
-		case conn := <-listen:
-			go handleClient(conn)
-		case killSignal := <-interrupt:
-			stdlog.Println("Got signal:", killSignal)
-			stdlog.Println("Stoping listening on ", listener.Addr())
-			listener.Close()
-			if killSignal == os.Interrupt {
-				return "Daemon was interrupted by system signal", nil
-			}
-			return "Daemon was killed", nil
-		}
-	}
+	go p.run()
+	return nil
 }
+func (p *program) run() {
+	logger.Info("Starting ", p.DisplayName)
+	defer func() {
+		if service.Interactive() {
+			p.Stop(p.service)
+		} else {
+			p.service.Stop()
+		}
+	}()
 
-// Accept a client connection and collect it in a channel
-func acceptConnection(listener net.Listener, listen chan<- net.Conn) {
-	for {
-		conn, err := listener.Accept()
+	if p.Stderr != "" {
+		f, err := os.OpenFile(p.Stderr, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
 		if err != nil {
-			continue
-		}
-		listen <- conn
-	}
-}
-
-func handleClient(client net.Conn) {
-	for {
-		buf := make([]byte, 4096)
-		numbytes, err := client.Read(buf)
-		if numbytes == 0 || err != nil {
+			logger.Warningf("Failed to open std err %q: %v", p.Stderr, err)
 			return
 		}
-		client.Write(buf[:numbytes])
+		defer f.Close()
+		p.cmd.Stderr = f
 	}
+	if p.Stdout != "" {
+		f, err := os.OpenFile(p.Stdout, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
+		if err != nil {
+			logger.Warningf("Failed to open std out %q: %v", p.Stdout, err)
+			return
+		}
+		defer f.Close()
+		p.cmd.Stdout = f
+	}
+
+	err := p.cmd.Run()
+	if err != nil {
+		logger.Warningf("Error running: %v", err)
+	}
+
+	return
+}
+func (p *program) Stop(s service.Service) error {
+	close(p.exit)
+	logger.Info("Stopping ", p.DisplayName)
+	if p.cmd.ProcessState.Exited() == false {
+		p.cmd.Process.Kill()
+	}
+	if service.Interactive() {
+		os.Exit(0)
+	}
+	return nil
 }
 
-func init() {
-	stdlog = log.New(os.Stdout, "", 0)
-	errlog = log.New(os.Stderr, "", 0)
+func getConfigPath() (string, error) {
+	fullexecpath, err := osext.Executable()
+	if err != nil {
+		return "", err
+	}
+
+	dir, execname := filepath.Split(fullexecpath)
+	ext := filepath.Ext(execname)
+	name := execname[:len(execname)-len(ext)]
+
+	return filepath.Join(dir, name+".json"), nil
+}
+
+func getConfig(path string) (*Config, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	conf := &Config{}
+
+	r := json.NewDecoder(f)
+	err = r.Decode(&conf)
+	if err != nil {
+		return nil, err
+	}
+	return conf, nil
 }
 
 func main() {
-	srv, err := daemon.New(name, description, dependencies...)
+	svcFlag := flag.String("service", "", "Control the system service.")
+	flag.Parse()
+
+	configPath, err := getConfigPath()
 	if err != nil {
-		errlog.Println("Error: ", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
-	service := &Service{srv}
-	status, err := service.Manage()
+	config, err := getConfig(configPath)
 	if err != nil {
-		errlog.Println(status, "\nError: ", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
-	fmt.Println(status)
-	execpath, _ := daemon.ExecPath()
-	fmt.Println(execpath)
+
+	svcConfig := &service.Config{
+		Name:        config.Name,
+		DisplayName: config.DisplayName,
+		Description: config.Description,
+	}
+
+	prg := &program{
+		exit: make(chan struct{}),
+
+		Config: config,
+	}
+	s, err := service.New(prg, svcConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+	prg.service = s
+
+	errs := make(chan error, 5)
+	logger, err = s.Logger(errs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go func() {
+		for {
+			err := <-errs
+			if err != nil {
+				log.Print(err)
+			}
+		}
+	}()
+
+	if len(*svcFlag) != 0 {
+		err := service.Control(s, *svcFlag)
+		if err != nil {
+			log.Printf("Valid actions: %q\n", service.ControlAction)
+			log.Fatal(err)
+		}
+		return
+	}
+	err = s.Run()
+	if err != nil {
+		logger.Error(err)
+	}
 }
