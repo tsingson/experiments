@@ -11,8 +11,8 @@ func bigBytes() *[]byte {
 	s := make([]byte, 100000000)
 	return &s
 }
-func main() {
 
+func main() {
 	var mem runtime.MemStats
 
 	fmt.Println("memory baseline...")
@@ -37,7 +37,6 @@ func main() {
 	log.Println(mem.TotalAlloc)
 	log.Println(mem.HeapAlloc)
 	log.Println(mem.HeapSys)
-
 }
 
 // design and code by tsingson

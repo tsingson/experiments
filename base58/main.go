@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
+
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/satori/go.uuid"
-	"github.com/tsingson/fastweb/guid"
+	"github.com/tsingson/fastx/guid"
+	"github.com/tsingson/uuid"
 )
 
 func main() {
@@ -41,5 +42,4 @@ func main() {
 	fmt.Println("base58", uures)
 	uuorgin := base58.Decode(uures)
 	fmt.Println("base58 decode ", string(uuorgin))
-
 }

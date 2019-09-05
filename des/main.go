@@ -12,10 +12,11 @@ import (
 )
 
 func main() {
-
-	key := []byte{0xa3, 0xbe, 0x93, 0xff, 0x10, 0x34, 0x5f, 0xde,
+	key := []byte{
+		0xa3, 0xbe, 0x93, 0xff, 0x10, 0x34, 0x5f, 0xde,
 		0xc6, 0x2e, 0x57, 0x83, 0x29, 0x7c, 0x8e, 0xf6,
-		0xa3, 0x58, 0x34, 0x27, 0x13, 0x2c, 0x4e, 0xd2}
+		0xa3, 0x58, 0x34, 0x27, 0x13, 0x2c, 0x4e, 0xd2,
+	}
 
 	iv := []byte("34234323")
 	data := []byte(`{"activationcode":"123445678asd","mac":"00:50:56:31:40:38","mac_2":"03:40:76:A1:4C:E8","apktype":"WonderfulOttMovie","libversion":"libVK_STBProxy1.3.9","nativesn":"12.00-09.10-10000000","platforminfo":"Android 6.01","grade":3}`)
@@ -43,6 +44,7 @@ func BytesToStringUnsafe(b []byte) string {
 	}
 	return *(*string)(unsafe.Pointer(&strHeader))
 }
+
 func DesEncrypt(data, key []byte, iv []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
@@ -55,6 +57,7 @@ func DesEncrypt(data, key []byte, iv []byte) ([]byte, error) {
 	blockMode.CryptBlocks(out, data)
 	return out, nil
 }
+
 func DesDecrypt(data []byte, key []byte, iv []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {

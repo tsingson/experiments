@@ -7,14 +7,14 @@ package main
 import (
 	"expvar"
 	"flag"
+	"log"
+	"net"
+	"runtime"
+
 	"github.com/buaazp/fasthttprouter"
 	"github.com/kavu/go_reuseport"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/expvarhandler"
-
-	"log"
-	"net"
-	"runtime"
 )
 
 var (
@@ -56,11 +56,11 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	// 使用 reuseport 进行连接监听, 以便使用 taskset 来绑定 CPU
 
-	//defer listener.Close()
+	// defer listener.Close()
 
 	router := fasthttprouter.New()
 	//	router.GET("/", fsHandler)
-	//router.NotFound = fasthttp.FSHandler(*dir, 0)
+	// router.NotFound = fasthttp.FSHandler(*dir, 0)
 	//
 	router.NotFound = fsHandler(*dir, 0)
 

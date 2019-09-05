@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/mozillazg/request"
-	"github.com/pkg/errors"
 	"net/http"
 	"sync"
+
+	"github.com/mozillazg/request"
+	"github.com/pkg/errors"
 )
 
 type (
@@ -16,7 +17,7 @@ type (
 )
 
 func main() {
-	var cq = config{"test", "Status"}
+	cq := config{"test", "Status"}
 	responseBody, err := httpPost("http://httpbin.org/post", cq)
 	if err == nil {
 		fmt.Println(responseBody)
@@ -34,7 +35,7 @@ func httpPost(postUrl string, postJson interface{}) (string, error) {
 		req.Headers = map[string]string{
 			"Content-Type": "application/json;charset=UTF-8",
 		}
-		//var cq = config{"test", "Status"}
+		// var cq = config{"test", "Status"}
 		req.Json = postJson
 		resp, err := req.Post(postUrl)
 		if err == nil && resp.StatusCode == http.StatusOK {

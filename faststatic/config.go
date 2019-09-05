@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/koding/multiconfig"
 )
 
@@ -22,9 +23,7 @@ type (
 	}
 )
 
-var (
-	Configuration *Config
-)
+var Configuration *Config
 
 func init() {
 	m := multiconfig.NewWithPath("config-fasthttp.toml") // supports TOML and JSON

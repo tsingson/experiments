@@ -23,12 +23,12 @@ const (
 
 const SecondInNano = 1000 * 1000 * 1000
 
-//return 1441006057 in sec
+// return 1441006057 in sec
 func GetTimestamp() int64 {
 	return time.Now().Unix()
 }
 
-//return 1441006057 in sec
+// return 1441006057 in sec
 func GetTimestampString() string {
 	return strconv.FormatInt(GetTimestamp(), 10)
 }
@@ -43,14 +43,12 @@ func GetTimestampInMilliString() string {
 	return strconv.FormatInt(GetTimestampInMilli(), 10)
 }
 
-//微秒
+// 微秒
 func GetTimestampInMicro() int64 {
 	return int64(time.Now().UnixNano() / 1000) // ms
 }
 
-
-
-//format
+// format
 func GetCurrentTimeFormat(format string) string {
 	return GetTimeFormat(GetTimestamp(), format)
 }

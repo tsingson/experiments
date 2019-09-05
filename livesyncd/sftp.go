@@ -1,10 +1,10 @@
 package main
 
-import(
-	"os/exec"
-	"os"
+import (
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -14,7 +14,6 @@ func StartSFTPSync(events chan *SyncEvent, quit chan bool, config Config) {
 	sftp.Stdout = os.Stdout
 
 	cmd, err := sftp.StdinPipe()
-
 	if err != nil {
 		log.Fatalf("Could not open Stdin of SFTP: %s", err)
 	}
@@ -48,5 +47,3 @@ func StartSFTPSync(events chan *SyncEvent, quit chan bool, config Config) {
 		}
 	}()
 }
-
-

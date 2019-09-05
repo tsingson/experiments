@@ -1,27 +1,27 @@
 package xrsa
 
 import (
-	"encoding/pem"
-	"encoding/base64"
-	"crypto/x509"
-	"crypto/rsa"
-	"crypto/rand"
-	"errors"
-	"crypto"
-	"io"
 	"bytes"
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
 	"encoding/asn1"
+	"encoding/base64"
+	"encoding/pem"
+	"errors"
+	"io"
 )
 
 const (
-	CHAR_SET = "UTF-8"
-	BASE_64_FORMAT = "UrlSafeNoPadding"
+	CHAR_SET               = "UTF-8"
+	BASE_64_FORMAT         = "UrlSafeNoPadding"
 	RSA_ALGORITHM_KEY_TYPE = "PKCS8"
-	RSA_ALGORITHM_SIGN = crypto.SHA256
+	RSA_ALGORITHM_SIGN     = crypto.SHA256
 )
 
 type XRsa struct {
-	publicKey *rsa.PublicKey
+	publicKey  *rsa.PublicKey
 	privateKey *rsa.PrivateKey
 }
 
@@ -81,8 +81,8 @@ func NewXRsa(publicKey []byte, privateKey []byte) (*XRsa, error) {
 
 	pri, ok := priv.(*rsa.PrivateKey)
 	if ok {
-		return &XRsa {
-			publicKey: pub,
+		return &XRsa{
+			publicKey:  pub,
 			privateKey: pri,
 		}, nil
 	} else {
@@ -91,7 +91,7 @@ func NewXRsa(publicKey []byte, privateKey []byte) (*XRsa, error) {
 }
 
 func (r *XRsa) PublicEncrypt(data string) (string, error) {
-	partLen := r.publicKey.N.BitLen() / 8 - 11
+	partLen := r.publicKey.N.BitLen()/8 - 11
 	chunks := split([]byte(data), partLen)
 
 	buffer := bytes.NewBufferString("")

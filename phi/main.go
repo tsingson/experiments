@@ -13,10 +13,8 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-var (
-	//	output = log.New(os.Stdout, "", 0)
-	output zerolog.Logger
-)
+//	output = log.New(os.Stdout, "", 0)
+var output zerolog.Logger
 
 func init() {
 	logFilename := "./logxxxxxx.log"

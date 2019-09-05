@@ -27,7 +27,6 @@ func registerPProf(h func(string, func(http.ResponseWriter, *http.Request))) {
 }
 
 func main() {
-
 	port := flag.Int("p", 8080, "http port")
 	flag.Parse()
 

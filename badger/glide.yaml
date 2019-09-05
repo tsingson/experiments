@@ -1,7 +1,0 @@
-package: github.com/tsingson/experiments/badger
-import:
-- package: github.com/dgraph-io/badger
-- package: github.com/satori/go.uuid
-- package: github.com/tsingson/gin
-  subpackages:
-  - utils

@@ -44,7 +44,6 @@ func (cc *countConsumer) Consume(lower, upper int64) {
 	}
 }
 
-
 func main() {
 	NumPublishers := runtime.NumCPU()
 	runtime.GOMAXPROCS(NumPublishers)
@@ -54,7 +53,7 @@ func main() {
 	totalIterations = iterations * int64(NumPublishers)
 	fmt.Printf("Total: %d,  Iterations: %d, Publisher: %d, Consumer: 1\n", totalIterations, iterations, NumPublishers)
 
-	var consumer = &countConsumer{TotalIterations: totalIterations, Count: 0}
+	consumer := &countConsumer{TotalIterations: totalIterations, Count: 0}
 	consumer.WG.Add(1)
 	controller := disruptor.Configure(RingBufferSize).WithConsumerGroup(consumer).BuildShared()
 	controller.Start()

@@ -7,7 +7,7 @@ import (
 
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/renstrom/shortuuid"
-	"github.com/satori/go.uuid"
+	"github.com/tsingson/uuid"
 )
 
 type base58Encoder struct{}

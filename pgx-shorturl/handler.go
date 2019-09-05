@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/jackc/pgx"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/jackc/pgx"
 )
 
 func getUrlHandler(w http.ResponseWriter, req *http.Request) {

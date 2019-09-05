@@ -3,13 +3,14 @@ package main
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/buaazp/fasthttprouter"
-	"github.com/valyala/fasthttp"
 	"html/template"
 	"io"
 	"log"
 	"strconv"
 	"time"
+
+	"github.com/buaazp/fasthttprouter"
+	"github.com/valyala/fasthttp"
 )
 
 // Hello Handler
@@ -70,6 +71,7 @@ func DownloadHandler(ctx *fasthttp.RequestCtx) {
 		fmt.Println("the filename is not string.")
 	}
 }
+
 func main() {
 	router := fasthttprouter.New()
 	router.GET("/", Index)

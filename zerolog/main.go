@@ -42,14 +42,14 @@ func main() {
 	}
 	defer w.Close()
 }
+
 func _main() {
 	log := initLogger()
 
 	log.Print("hello world")
-	//logger := fastlog.New(os.Stderr).With().Timestamp().Logger()
+	// logger := fastlog.New(os.Stderr).With().Timestamp().Logger()
 	log.Output(os.Stderr)
 	log.Info().Str("foo", "bar").Msg("hello world")
-
 }
 
 func initLogger() zerolog.Logger {

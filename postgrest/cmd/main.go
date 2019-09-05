@@ -70,7 +70,7 @@ func main() {
 	}
 	if response.StatusCode == http.StatusOK {
 		data, _ := ioutil.ReadAll(response.Body)
-		//handle data ...
+		// handle data ...
 	}
 
 	// INSERT INTO users (first_name, last_name) values("Tester", "McTesterson")

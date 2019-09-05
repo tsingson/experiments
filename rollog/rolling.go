@@ -1,13 +1,14 @@
 package main
 
 import (
+	"os"
+	"path"
+
 	"github.com/robfig/cron"
 	"github.com/sanity-io/litter"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"path"
 )
 
 const (
@@ -58,7 +59,6 @@ func Configure(config Config) {
 	}
 	DefaultZapLogger = newZapLogger(config.EncodeLogsAsJson, zapcore.NewMultiWriteSyncer(writers...))
 	zap.RedirectStdLog(DefaultZapLogger)
-
 }
 
 func newRollingFile(config Config) zapcore.WriteSyncer {
@@ -70,9 +70,9 @@ func newRollingFile(config Config) zapcore.WriteSyncer {
 
 	lj_log := lumberjack.Logger{
 		Filename:   path.Join(config.Directory, config.Filename),
-		MaxSize:    config.MaxSize,    //megabytes
-		MaxAge:     config.MaxAge,     //days
-		MaxBackups: config.MaxBackups, //files
+		MaxSize:    config.MaxSize,    // megabytes
+		MaxAge:     config.MaxAge,     // days
+		MaxBackups: config.MaxBackups, // files
 		LocalTime:  true,
 	}
 
@@ -114,5 +114,4 @@ func main() {
 	// defer logger.Sync() // flushes buffer, if any
 	litter.Dump(zaplogger)
 	fmt.Println("running...")
-
 }

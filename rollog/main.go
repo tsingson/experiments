@@ -12,8 +12,8 @@ import (
 )
 
 func init() {
-
 }
+
 func logInFile() {
 	log.SetOutput(&lumberjack.Logger{
 		Filename:   "/var/log/myapp/foo.log",
@@ -22,8 +22,8 @@ func logInFile() {
 		MaxAge:     28,   // days
 		Compress:   true, // disabled by default
 	})
-
 }
+
 func sigHup(lumberLogger *lumberjack.Logger) {
 	//	lubberLogger := &lumberjack.Logger{}
 	//	log.SetOutput(lubberLogger)
@@ -37,6 +37,7 @@ func sigHup(lumberLogger *lumberjack.Logger) {
 		}
 	}()
 }
+
 func InitLogger() *zap.Logger {
 	// lumberjack.Logger is already safe for concurrent use, so we don't need to
 	// lock it.

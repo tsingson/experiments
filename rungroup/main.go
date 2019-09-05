@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/oklog/run"
-	"github.com/pkg/errors"
 	"strconv"
 	"time"
+
+	"github.com/oklog/run"
+	"github.com/pkg/errors"
 )
 
 func main() {
-
 	var g run.Group
 	{
 		cancel := make(chan struct{})
@@ -52,7 +52,7 @@ func main() {
 			time.Sleep(1 * time.Second)
 			fmt.Println(id)
 			fmt.Printf("----------- The second actor is returning immediately\n")
-			//return errors.New("immediate teardown")
+			// return errors.New("immediate teardown")
 			return nil
 		}, func(err error) {
 			// Note that this interrupt function is called, even though the
@@ -64,5 +64,4 @@ func main() {
 	}
 	result := g.Run()
 	fmt.Printf("The group was terminated with: %v\n", result)
-
 }

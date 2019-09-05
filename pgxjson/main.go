@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
+	"log"
+
 	"github.com/jackc/pgx"
 	"github.com/json-iterator/go"
-	"github.com/satori/go.uuid"
 	"github.com/tsingson/btcutil/base58"
-	"log"
+	"github.com/tsingson/uuid"
 )
 
 type (
@@ -58,7 +59,6 @@ func AfterConnect(conn *pgx.Conn) (err error) {
 }
 
 func main() {
-
 	config := pgx.ConnConfig{
 		Host:     "localhost",
 		User:     "postgres",
@@ -119,13 +119,13 @@ func NewGuid() string {
 	u := uuid.NewV4()
 	return hex.EncodeToString(u.Bytes())
 
-	//return base58.Encode([]byte(ustring))
+	// return base58.Encode([]byte(ustring))
 }
 
 func NewGuidBase58() string {
 	//	enc := new(guid.Base58)
 	u := uuid.NewV4()
-	//return hex.EncodeToString(u.Bytes())
+	// return hex.EncodeToString(u.Bytes())
 
 	return base58.Encode(u.Bytes())
 }

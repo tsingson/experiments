@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/satori/go.uuid"
+	"github.com/tsingson/uuid"
 )
 
 func main() {

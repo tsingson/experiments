@@ -11,7 +11,6 @@ const (
 )
 
 func main() {
-
 	city, err := datx.NewCity(datxFile)
 
 	if err == nil {

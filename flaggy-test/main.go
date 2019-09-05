@@ -21,7 +21,7 @@ func init() {
 
 	// you can disable various things by changing bools on the default parser
 	// (or your own parser if you have created one)
-	flaggy.DefaultParser.ShowHelpOnUnexpected = false
+	flaggy.DefaultParser.ShowHelpOnUnexpected = true
 
 	// you can set a help prepend or append on the default parser
 	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/integrii/flaggy"
@@ -34,6 +34,7 @@ func init() {
 	flaggy.SetVersion(version)
 	flaggy.Parse()
 }
+
 func main() {
 	if mySubcommand.Used {
 		fmt.Println("ok")

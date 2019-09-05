@@ -3,9 +3,10 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/streadway/amqp"
 	"log"
 	"time"
+
+	"github.com/streadway/amqp"
 )
 
 var conn *amqp.Connection
@@ -51,9 +52,8 @@ func close() {
 	conn.Close()
 }
 
-//连接rabbitmq server
+// 连接rabbitmq server
 func push() {
-
 	if channel == nil {
 		mqConnect()
 	}
@@ -76,7 +76,7 @@ func receive() {
 	forever := make(chan bool)
 
 	go func() {
-		//fmt.Println(*msgs)
+		// fmt.Println(*msgs)
 		for d := range msgs {
 			s := BytesToString(&(d.Body))
 			count++

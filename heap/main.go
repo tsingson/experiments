@@ -22,7 +22,7 @@ func (pq PriorityQueue) Less(i, j int) bool {
 	return pq[i].Expiry < pq[j].Expiry
 }
 
-// We just implement the pre-defined function in interface of heap.
+// We just implement the pre-defined function in interfacce of heap.
 
 func (pq *PriorityQueue) Pop() interface{} {
 	old := *pq
@@ -47,7 +47,6 @@ func (pq PriorityQueue) Swap(i, j int) {
 }
 
 func main() {
-
 	listItems := []*Item{
 		{Name: "Carrot", Expiry: 30},
 		{Name: "Potato", Expiry: 45},

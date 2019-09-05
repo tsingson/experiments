@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/howeyc/fsnotify"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,6 +10,8 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/howeyc/fsnotify"
 )
 
 // Start forwarding events from the watcher's channel to the
@@ -65,7 +66,6 @@ func startWatchLoop(sync chan *SyncEvent, quit chan bool, watcher *fsnotify.Watc
 func addWatchesRecursive(dir string, watcher *fsnotify.Watcher) int {
 	var watched int
 	entries, err := ioutil.ReadDir(dir)
-
 	if err != nil {
 		log.Println(err)
 		return 0
@@ -88,7 +88,6 @@ func addWatchesRecursive(dir string, watcher *fsnotify.Watcher) int {
 
 func refreshIndex(dir string, watcher *fsnotify.Watcher, sync chan *SyncEvent) {
 	entries, err := ioutil.ReadDir(dir)
-
 	if err != nil {
 		log.Println(err)
 		return
@@ -120,7 +119,6 @@ func isExcluded(name string) bool {
 	for _, p := range config.Ignore {
 		rel, _ := filepath.Rel(root, name)
 		matched, err := filepath.Match(p, rel)
-
 		if err != nil {
 			log.Printf("Error in Pattern %q: %s", p, err)
 		}
@@ -187,13 +185,11 @@ func main() {
 	rlimit.Cur = rlimit.Max
 
 	err := syscall.Setrlimit(syscall.RLIMIT_NOFILE, rlimit)
-
 	if err != nil {
 		log.Panicf("Could not change Rlimit: %q", err)
 	}
 
 	watcher, err := fsnotify.NewWatcher()
-
 	if err != nil {
 		log.Panicln(err)
 	}

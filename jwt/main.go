@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/tsingson/experiments/jwt/jwt"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/tsingson/experiments/jwt/jwt"
 )
 
 func helloHandler(c *gin.Context) {
@@ -14,12 +15,9 @@ func helloHandler(c *gin.Context) {
 		"userID": claims["id"],
 		"text":   "Hello World.",
 	})
-
 }
 
-var (
-	authMiddleware *jwt.GinJWTMiddleware
-)
+var authMiddleware *jwt.GinJWTMiddleware
 
 func init() {
 	// the jwt middleware
@@ -65,7 +63,6 @@ func init() {
 		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 		TimeFunc: time.Now,
 	}
-
 }
 
 func main() {

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/jackc/pgx"
-
 	"net/http"
 	"os"
+
+	"github.com/jackc/pgx"
 
 	"github.com/rs/zerolog"
 )
@@ -22,11 +22,9 @@ func init() {
 	zerolog.TimeFieldFormat = ""
 
 	log = zerolog.New(os.Stderr)
-
 }
 
 func main() {
-
 	pool, err = InitPgx(log)
 	if err != nil {
 		log.Panic().Err(err).Msg("Unable to create connection pool")

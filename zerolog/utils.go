@@ -1,13 +1,14 @@
 package main
 
 import (
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 const (
@@ -18,6 +19,7 @@ func time_encoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	//	enc.AppendString("[" + t.Format("2006-01-02 15:04:05") + "]")
 	enc.AppendString(t.Format(LogTimeFormat))
 }
+
 func sigHup(lumberLogger *lumberjack.Logger) {
 	//	lubberLogger := &lumberjack.Logger{}
 	//	log.SetOutput(lubberLogger)
@@ -43,6 +45,7 @@ func InitLogFile(logFilename string) *lumberjack.Logger {
 	//
 	return lumberLogger
 }
+
 func InitLogger(encodeAsJSON, productMode bool, lumberLogger *lumberjack.Logger) *zap.Logger {
 	// lumberjack.Logger is already safe for concurrent use, so we don't need to
 	// lock it.
@@ -75,10 +78,10 @@ func InitLogger(encodeAsJSON, productMode bool, lumberLogger *lumberjack.Logger)
 
 	core := zapcore.NewCore(
 		encoder,
-		zapcore.NewMultiWriteSyncer(writersync...), //logWriteSyncer,
+		zapcore.NewMultiWriteSyncer(writersync...), // logWriteSyncer,
 		atom,
 	)
-	//zap.NewDevelopment()
+	// zap.NewDevelopment()
 	/**
 	if productMode {
 	 atom.SetLevel(zap.ErrorLevel)

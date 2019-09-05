@@ -1,6 +1,3 @@
-
-
-
 package main
 
 import (
@@ -11,7 +8,6 @@ import (
 )
 
 func main() {
-
 	ip := GetLocalIP()
 	fmt.Println(ip)
 }
@@ -45,6 +41,3 @@ func GetLocalIP() string {
 	}
 	return ""
 }
-
-
-

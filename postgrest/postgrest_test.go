@@ -363,7 +363,6 @@ func TestPatch(t *testing.T) {
 	if err == nil || !strings.Contains(err.Error(), expectedError.Error()) {
 		t.Errorf("Patch returned unexpected error:\nExpected: %v\nGot: %v", expectedError, err)
 	}
-
 }
 
 func TestPatchJSON(t *testing.T) {

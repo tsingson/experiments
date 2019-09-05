@@ -42,14 +42,14 @@ func isSuccess(httpStatusCode int) bool {
 	return httpStatusCode >= 200 && httpStatusCode < 300
 }
 
-// jsonEncode converts the given payload into an io.Reader interface and produces JSON as bytes
+// jsonEncode converts the given payload into an io.Reader interfacce and produces JSON as bytes
 func jsonEncode(payload interface{}) (io.Reader, error) {
 	b := new(bytes.Buffer)
 	err := json.NewEncoder(b).Encode(payload)
 	return b, err
 }
 
-// unmarshalResponse unmarshals the body of an http.Response object into the target interface
+// unmarshalResponse unmarshals the body of an http.Response object into the target interfacce
 func unmarshalResponse(response *http.Response, target interface{}) (int, error) {
 	defer response.Body.Close()
 
@@ -153,12 +153,12 @@ func (c Claims) Valid() error {
 	return nil
 }
 
-// HTTPClientAdapter is an interface for sending http.Request objects
+// HTTPClientAdapter is an interfacce for sending http.Request objects
 type HTTPClientAdapter interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
-// PgrestAdapter is an interface that describes the pgrestAgent
+// PgrestAdapter is an interfacce that describes the pgrestAgent
 type PgrestAdapter interface {
 	Delete(table string, query *url.Values) (*http.Response, error)
 	DeleteJSON(table string, query *url.Values) (int, error)
@@ -173,7 +173,7 @@ type PgrestAdapter interface {
 	PostJSON(table string, payload interface{}, target interface{}) (int, error)
 }
 
-// JWTGenerator is an interface for generating JSON Web Tokens
+// JWTGenerator is an interfacce for generating JSON Web Tokens
 type JWTGenerator func(claims interface{}, secret string) (tokenStr string, err error)
 
 // Agent encapsulates methods for making HTTP requests to a postgREST service
@@ -231,7 +231,7 @@ func (agent *Agent) generateWriteTokenStr() (string, error) {
 // Ping sends a request to the postgrest master and slave servers
 // and returns an error if the response status is not bwtween 200 and 299
 func (agent *Agent) Ping() error {
-	var urls = []struct {
+	urls := []struct {
 		name string
 		url  string
 	}{
@@ -272,7 +272,7 @@ func (agent *Agent) Get(table string, query *url.Values) (*http.Response, error)
 }
 
 // GetJSON makes an HTTP GET request to a postgREST service and unmarshals
-// the response into the given target interface
+// the response into the given target interfacce
 // Returns error if response status code is not inclusively between 200 and 299
 func (agent *Agent) GetJSON(table string, query *url.Values, target interface{}) (int, error) {
 	response, err := agent.Get(table, query)
@@ -292,7 +292,7 @@ func (agent *Agent) Post(table string, body io.Reader) (*http.Response, error) {
 }
 
 // PostJSON makes an HTTP POST request to a postgREST service and unmarshals
-// the response into the given target interface
+// the response into the given target interfacce
 // Returns error if the response status code is not inclusively between 200 and 299
 func (agent *Agent) PostJSON(table string, payload interface{}, target interface{}) (int, error) {
 	var response *http.Response

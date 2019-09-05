@@ -56,6 +56,7 @@ func (p *program) Start(s service.Service) error {
 	go p.run()
 	return nil
 }
+
 func (p *program) run() {
 	logger.Info("Starting ", p.DisplayName)
 	defer func() {
@@ -92,6 +93,7 @@ func (p *program) run() {
 
 	return
 }
+
 func (p *program) Stop(s service.Service) error {
 	close(p.exit)
 	logger.Info("Stopping ", p.DisplayName)

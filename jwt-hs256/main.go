@@ -39,8 +39,7 @@ func main() {
 		return mySigningKey, nil
 	})
 
-	//fmt.Println("verify ")
+	// fmt.Println("verify ")
 	litter.Dump(tt1.Claims)
-	//litter.Dump(mySigningKey)
-
+	// litter.Dump(mySigningKey)
 }

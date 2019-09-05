@@ -22,11 +22,9 @@ func main() {
 	pathOperation()
 	getMacAddress()
 	user_input()
-
 }
 
 func check_port(host string, start_port, end_port int) {
-
 	for i := start_port; i <= end_port; i++ {
 		fmt.Println(i)
 		qualified_host := fmt.Sprintf("%s%s%d", host, ":", i)
@@ -42,7 +40,6 @@ func check_port(host string, start_port, end_port int) {
 }
 
 func pathOperation() {
-
 	execDirAbsPath, _ := os.Getwd()
 	log.Println("执行程序所在目录的绝对路径　　　　　　　:", execDirAbsPath)
 
@@ -58,7 +55,7 @@ func pathOperation() {
 	execDirAbsPath, _ = filepath.Abs(execDirRelativePath)
 	log.Println("执行程序所在目录的绝对路径　　　　　　　:", execDirAbsPath)
 
-	os.Chdir(execDirRelativePath) //进入目录
+	os.Chdir(execDirRelativePath) // 进入目录
 	enteredDirAbsPath, _ := os.Getwd()
 	log.Println("所进入目录的绝对路径　　　　　　　　　　:", enteredDirAbsPath)
 }
@@ -75,7 +72,6 @@ func user_input() {
 }
 
 func getMacAddress() {
-
 	interfaces, err := net.Interfaces()
 	if err != nil {
 		panic("Poor soul, here is what you got: " + err.Error())
@@ -83,5 +79,4 @@ func getMacAddress() {
 	for _, inter := range interfaces {
 		fmt.Println(inter.Name, inter.HardwareAddr)
 	}
-
 }

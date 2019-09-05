@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/satori/go.uuid"
-	"github.com/tsingson/experiments/pgxfile"
 	"os"
+
+	"github.com/tsingson/experiments/pgxfile"
+	"github.com/tsingson/uuid"
 )
 
 func main() {
@@ -51,5 +52,4 @@ func main() {
 	}
 	fmt.Printf("Successfully created user mwood\n")
 	fmt.Printf("Successfully created user mwood\n")
-
 }

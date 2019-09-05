@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 }
 
 func cfb_encrypt() {

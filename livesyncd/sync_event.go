@@ -1,6 +1,6 @@
 package main
 
-import(
+import (
 	"github.com/howeyc/fsnotify"
 )
 
@@ -15,7 +15,7 @@ type SyncEvent struct {
 	OldName   string              // Old name of the file, in case it was renamed.
 	Type      int                 // Type of the sync event
 	FileEvent *fsnotify.FileEvent // original fsnotify event
-	Dir bool
+	Dir       bool
 }
 
 func (self *SyncEvent) IsPut() bool {

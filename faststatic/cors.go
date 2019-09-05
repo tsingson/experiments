@@ -6,7 +6,6 @@ import (
 )
 
 func init() {
-
 }
 
 var (
@@ -18,7 +17,6 @@ var (
 
 func CORS(next fasthttprouter.Handler) fasthttprouter.Handle {
 	return fasthttprouter.Handle(func(ctx *fasthttp.RequestCtx, p fasthttprouter.Params) {
-
 		ctx.Response.Header.Set("Access-Control-Allow-Credentials", corsAllowCredentials)
 		ctx.Response.Header.Set("Access-Control-Allow-Headers", corsAllowHeaders)
 		ctx.Response.Header.Set("Access-Control-Allow-Methods", corsAllowMethods)

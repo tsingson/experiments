@@ -1,11 +1,11 @@
 package xrsa
 
-import(
-	"testing"
+import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"encoding/json"
+	"testing"
 )
 
 var publicKey *bytes.Buffer = bytes.NewBufferString("")
@@ -58,7 +58,7 @@ func TestSignVerify(t *testing.T) {
 }
 
 func TestCrossLanguage(t *testing.T) {
-	var data = make(map[string] string)
+	data := make(map[string]string)
 	pubKey, err := ioutil.ReadFile("../../test/pub.pem")
 	if err != nil {
 		t.Fatal(err.Error())

@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/allegro/bigcache"
-	"github.com/valyala/fasthttp"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/allegro/bigcache"
+	"github.com/valyala/fasthttp"
 )
 
 const pathPrefix = "/cache/"
