@@ -40,7 +40,7 @@ require (
 	github.com/tsingson/fastx v0.3.4
 	github.com/tsingson/phi v0.3.1
 	github.com/tsingson/uuid v3.2.1+incompatible
-	github.com/valyala/fasthttp v1.4.0
+	github.com/valyala/fasthttp v1.34.0
 	github.com/valyala/fastjson v1.4.1
 	github.com/xyproto/permissions2 v0.0.0-20190729074010-6510c7590749
 	go.uber.org/zap v1.10.0
