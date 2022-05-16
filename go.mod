@@ -11,13 +11,13 @@ require (
 	github.com/buaazp/fasthttprouter v0.1.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/camelcase v1.0.0 // indirect
-	github.com/gin-gonic/gin v1.4.0
+	github.com/gin-gonic/gin v1.7.0
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/howeyc/fsnotify v0.9.0
 	github.com/integrii/flaggy v1.2.2
 	github.com/ipipdotnet/datx-go v0.0.0-20181123035258-af996d4701a0
 	github.com/jackc/pgx v3.5.0+incompatible
-	github.com/json-iterator/go v1.1.7
+	github.com/json-iterator/go v1.1.9
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/kardianos/service v1.0.0
 	github.com/kavu/go_reuseport v1.4.0
